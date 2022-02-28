@@ -4,6 +4,11 @@ import java.util.stream.Stream;
 
 public class Utils {
 
+    /**
+     * Get fibonacci number by index
+     *
+     * @return Long
+     */
     public static Long getFibNumByIndex(Integer index) {
         long a = 0L;
         long b = 1L;
