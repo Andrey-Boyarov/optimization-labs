@@ -27,11 +27,7 @@ public class Utils {
     }
 
     private static void checkLegal(Integer index){
-        try{
-            getNumber(index);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        if (index < 0) new IndexOutOfBoundsException().printStackTrace();
     }
 
     private static boolean isCalculated(Integer index){
