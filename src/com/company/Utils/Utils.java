@@ -1,8 +1,12 @@
 package com.company.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Utils {
+
+    private static List<Long> fibNums;
 
     /**
      * Get fibonacci number by index
@@ -10,21 +14,48 @@ public class Utils {
      * @return Long
      */
     public static Long getFibNumByIndex(Integer index) {
-        long a = 0L;
-        long b = 1L;
-        long c;
 
-        if (index < 0) return null;
-        if (index == 0) return 0L;
-        if (index == 1) return 1L;
+        checkLegal(index);
 
-        for (int i = 2; i <= index; i++)
-        {
-            c = a + b;
-            a = b;
-            b = c;
+        initialize();
+
+        while (!isCalculated(index)){
+            setNumber(getNumber(size() - 1) + getNumber(size() - 2));
         }
 
-        return b;
+        return getNumber(index);
+    }
+
+    private static void checkLegal(Integer index){
+        try{
+            getNumber(index);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean isCalculated(Integer index){
+        return size() - 1 >= index;
+    }
+
+    private static void setNumber(Long number){
+        fibNums.add(number);
+    }
+
+    private static Long getNumber(Integer index){
+        return fibNums.get(index);
+    }
+
+    private static Integer size(){
+        return fibNums.size();
+    }
+
+    private static void initialize(){
+        if (fibNums == null){
+            fibNums = new ArrayList<>();
+            setNumber(0L);
+            setNumber(1L);
+            setNumber(1L);
+        }
     }
 }
