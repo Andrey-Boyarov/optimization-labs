@@ -11,7 +11,7 @@ public class Lab2 {
      *
      * @return Double
      */
-    public static DimPoint dichotomy(Function<DimPoint, Double> f, DimPoint x_0, DimPoint x_1, Integer max_iters, Double eps)
+    public static strictfp DimPoint dichotomy(Function<DimPoint, Double> f, DimPoint x_0, DimPoint x_1, Integer max_iters, Double eps)
     {
         if (eps == null) eps = 1e-6d;
         if (max_iters == null) max_iters = 1000;
@@ -28,9 +28,9 @@ public class Lab2 {
             {
                 break;
             }
-            x_c = (x_1.plus(x_0)).times(0.5);
+            x_c = x_1.plus(x_0).times(0.5);
 
-            if (f.apply(x_c.plus(dir).times(eps)) > f.apply(x_c.minus(dir).times(eps)))
+            if (f.apply(x_c.plus(dir.times(eps))) > f.apply(x_c.minus(dir.times(eps))))
             {
                 x_1 = x_c;
                 continue;

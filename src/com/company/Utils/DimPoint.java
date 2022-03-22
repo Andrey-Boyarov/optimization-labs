@@ -17,7 +17,7 @@ public class DimPoint {
     }
 
     public DimPoint(DimPoint point){
-        params = point.params;
+        params = new ArrayList<>(point.params);
     }
 
     public DimPoint(Double x, Double y){
@@ -35,7 +35,7 @@ public class DimPoint {
         return params.stream().map(el -> " ::" + el.toString()).reduce("", (partialString, element) -> partialString + element);
     }
 
-    public DimPoint minus(DimPoint point){
+    public strictfp DimPoint minus(DimPoint point){
         if (this.size() != point.size())
         {
             new IllegalArgumentException().printStackTrace();
@@ -49,7 +49,7 @@ public class DimPoint {
         return res;
     }
 
-    public DimPoint plus(DimPoint point){
+    public strictfp DimPoint plus(DimPoint point){
         if (this.size() != point.size())
         {
             new IllegalArgumentException().printStackTrace();
@@ -63,7 +63,7 @@ public class DimPoint {
         return res;
     }
 
-    public DimPoint times(Double val)
+    strictfp public DimPoint times(Double val)
     {
         DimPoint res = new DimPoint(this);
         for (int i = 0; i < size(); i++)
