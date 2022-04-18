@@ -2,6 +2,7 @@ package com.company;
 
 import com.company.Labs.Lab1;
 import com.company.Labs.Lab2;
+import com.company.Labs.Lab3;
 import com.company.Utils.DimPoint;
 
 public class Main {
@@ -20,5 +21,8 @@ public class Main {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+
+        Lab3.gradientDescend(point -> (point.get(0) - 2) * (point.get(0) - 2) + (point.get(1) - 2) * (point.get(1) - 2), new DimPoint(5d, 5d));
+        Lab3.conjGradientDescend(point -> (point.get(0) - 2) * (point.get(0) - 2) + (point.get(1) - 2) * (point.get(1) - 2), new DimPoint(5d, 5d));
     }
 }

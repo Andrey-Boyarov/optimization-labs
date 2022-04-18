@@ -2,6 +2,7 @@ package com.company.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class DimPoint {
 
@@ -18,6 +19,13 @@ public class DimPoint {
 
     public DimPoint(DimPoint point){
         params = new ArrayList<>(point.params);
+    }
+
+    public DimPoint(int size){
+        params = new ArrayList<>();
+        for (int i = 0; i < size; ++i){
+            params.add(0d);
+        }
     }
 
     public DimPoint(Double x, Double y){
@@ -97,5 +105,23 @@ public class DimPoint {
     public double magnitude()
     {
         return Math.sqrt(params.stream().mapToDouble(element -> element * element).sum());
+    }
+
+    public static DimPoint gradient(Function<DimPoint, Double> func, DimPoint x, double eps)
+    {
+        DimPoint x_l = new DimPoint(x);
+        DimPoint x_r = new DimPoint(x);
+        DimPoint df = new DimPoint(x.size());
+        for (int i = 0; i < x.size(); i++)
+        {
+            x_l.set(i, x_l.get(i) - eps);//   [i] -= eps;
+            x_r.set(i, x_r.get(i) + eps);
+
+            df.set(i,(func.apply(x_r) - func.apply(x_l)) * (0.5 / eps));
+
+            x_l.set(i, x_l.get(i) + eps);//   [i] -= eps;
+            x_r.set(i, x_r.get(i) - eps);
+        }
+        return df;
     }
 }
