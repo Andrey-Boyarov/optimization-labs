@@ -22,7 +22,7 @@ public class Main {
             exception.printStackTrace();
         }
 
-        Lab3.gradientDescend(point -> (point.get(0) - 2) * (point.get(0) - 2) + (point.get(1) - 2) * (point.get(1) - 2), new DimPoint(5d, 5d));
-        Lab3.conjGradientDescend(point -> (point.get(0) - 2) * (point.get(0) - 2) + (point.get(1) - 2) * (point.get(1) - 2), new DimPoint(5d, 5d));
+        Lab3.gradientDescend(point -> (point.get(0) - 2) * (point.get(0) - 4) + (point.get(1) - 2) * (point.get(1) - 2), new DimPoint(5d, 5d));
+        Lab3.conjGradientDescend(point -> (point.get(0) - 2) * (point.get(0) - 4) + (point.get(1) - 2) * (point.get(1) - 2), new DimPoint(5d, 5d));
     }
 }
