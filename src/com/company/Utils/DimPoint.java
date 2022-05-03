@@ -17,6 +17,28 @@ public class DimPoint {
         return this;
     }
 
+    public DimPoint add(double other)
+    {
+        for (int i = 0; i < size(); i++)
+        {
+            set(i, get(i) + other);
+        }
+        return this;
+    }
+
+    public  DimPoint add(DimPoint other)
+    {
+        if(size()!= other.size())
+        {
+            throw new RuntimeException("DimPoints add :: this.Size()!= other.Size()");
+        }
+        for (int i = 0; i < other.size(); i++)
+        {
+            set(i, get(i) + other.get(i));
+        }
+        return this;
+    }
+
     public DimPoint(DimPoint point){
         params = new ArrayList<>(point.params);
     }
@@ -43,6 +65,16 @@ public class DimPoint {
         return params.stream().map(el -> " ::" + el.toString()).reduce("", (partialString, element) -> partialString + element);
     }
 
+    public  DimPoint minus(double other)
+    {
+        DimPoint res = new DimPoint(this);
+        for (int i = 0; i < size(); i++)
+        {
+            res.set(i, get(i) - other);
+        }
+        return res;
+    }
+
     public strictfp DimPoint minus(DimPoint point){
         if (this.size() != point.size())
         {
@@ -57,6 +89,17 @@ public class DimPoint {
         return res;
     }
 
+    public static DimPoint minus(double b, DimPoint a)
+    {
+        DimPoint res = new DimPoint(a);
+
+        for(int i = 0; i < a.size(); i++)
+        {
+            res.set(i, b - a.get(i));
+        }
+        return  res;
+    }
+    
     public strictfp DimPoint plus(DimPoint point){
         if (this.size() != point.size())
         {
@@ -123,5 +166,59 @@ public class DimPoint {
             x_r.set(i, x_r.get(i) - eps);
         }
         return df;
+    }
+
+    private boolean isInRange(int index)
+    {
+        return index >= 0 && index < params.size();
+    }
+
+
+    public static double partial (Function<DimPoint, Double> func, DimPoint x, int index, double eps )
+    {
+        if (!x.isInRange(index))
+        {
+            throw new RuntimeException("Partial derivative index out of bounds!");
+        }
+        x.set(index,  x.get(index) + eps);//[index] += eps;
+        double f_r = func.apply(x);
+        x.set(index,  x.get(index) - 2.0 * eps);
+        double f_l = func.apply(x);
+        x.set(index,  x.get(index) +  eps);
+        return (f_r - f_l) / eps * 0.5;
+    }
+
+    public static double partial2(Function<DimPoint, Double> func, DimPoint x, int index_1, int index_2, double eps)
+    {
+        if (!x.isInRange(index_2))
+        {
+            throw new RuntimeException("Partial derivative index out of bounds!");
+        }
+        x.set(index_2,  x.get(index_2) - eps);
+        double f_l = partial(func, x, index_1, eps);
+        x.set(index_2,  x.get(index_2) + 2.0 * eps);
+        double f_r = partial(func, x, index_1, eps);
+        x.set(index_2,  x.get(index_2) - eps);
+        return (f_r - f_l) / eps * 0.5;
+    }
+
+    public double dot(DimPoint other)
+    {
+        if(size()!= other.size())
+        {
+            throw new RuntimeException("Dot product :: this.Size()!= other.Size()");
+        }
+        double dot = 0.0;
+
+        for (int i = 0; i < other.size(); i++)
+        {
+            dot += this.get(i) * other.get(i);
+        }
+        return dot;
+    }
+
+    public static double dot(DimPoint a, DimPoint b)
+    {
+        return a.dot(b);
     }
 }
