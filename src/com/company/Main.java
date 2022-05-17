@@ -30,12 +30,13 @@ public class Main {
 
 
         Function<DimPoint, Double> f = arg -> (arg.get(0) - 5) * arg.get(0) + (arg.get(1) - 3) * arg.get(1);
-        Function<DimPoint, Double> fWithout = arg -> (arg.get(0) - 4) * (arg.get(0) - 4) + (arg.get(1) - 4) * (arg.get(1) - 4);
-        Function<DimPoint, Double> fWith = arg -> (arg.get(0) - 4) * (arg.get(0) - 4) + (arg.get(1) - 4) * (arg.get(1) - 4)
+        Function<DimPoint, Double> fWithout = arg -> (arg.get(0) - 4) * (arg.get(0) - 4) + (arg.get(1) - 4) * (arg.get(1) - 4) + (arg.get(2) - 4) * (arg.get(2) - 4);
+        Function<DimPoint, Double> fWith = arg -> (arg.get(0) - 4) * (arg.get(0) - 4) + (arg.get(1) - 4) * (arg.get(1) - 4) + (arg.get(2) - 4) * (arg.get(2) - 4)
                 + 0.00001*(Math.sqrt(arg.get(0)) + Math.sqrt(arg.get(1)));
 
-        DimPoint raph1 = Lab4.newtoneRaphson(fWithout, new DimPoint(1d, 5d));
-        DimPoint raph2 = Lab4.newtoneRaphson(fWith, new DimPoint(1d, 5d));
+        DimPoint threedPoint = new DimPoint(1d, 5d).addDim(4d);
+        DimPoint raph1 = Lab4.newtoneRaphson(fWithout, threedPoint);
+        DimPoint raph2 = Lab4.newtoneRaphson(fWith, threedPoint);
 
         System.out.println("NewtoneRaphson  : " + raph1);
         System.out.println("NewtoneRaphson with shtraf  : " + raph2);

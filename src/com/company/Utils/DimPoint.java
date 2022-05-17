@@ -17,6 +17,11 @@ public class DimPoint {
         return this;
     }
 
+    public DimPoint addDim(double d){
+        params.add(d);
+        return this;
+    }
+
     public DimPoint add(double other)
     {
         for (int i = 0; i < size(); i++)
