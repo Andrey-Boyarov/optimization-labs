@@ -1,6 +1,7 @@
 package com.company.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -42,6 +43,11 @@ public class DimPoint {
             set(i, get(i) + other.get(i));
         }
         return this;
+    }
+
+    public DimPoint(Double... args) {
+        params = new ArrayList<>();
+        params.addAll(Arrays.asList(args));
     }
 
     public DimPoint(DimPoint point){
@@ -225,5 +231,182 @@ public class DimPoint {
     public static double dot(DimPoint a, DimPoint b)
     {
         return a.dot(b);
+    }
+
+    public  DimPoint mul(double other)
+    {
+        for (int i = 0; i < size(); i++)
+        {
+            set(i, get(i) * other);
+        }
+        return this;
+    }
+
+    public static DimPoint sub(DimPoint a, DimPoint b)
+    {
+        if(a.size()!= b.size())
+        {
+            throw new RuntimeException("Vectors sub :: this.Size()!= other.Size()");
+        }
+        DimPoint res = new DimPoint(a);
+        return res.sub(b);
+    }
+
+    public static DimPoint sub(DimPoint a, double b)
+    {
+        DimPoint res = new DimPoint(a);
+        return res.sub(b);
+    }
+
+    public static DimPoint sub(double b, DimPoint a)
+    {
+        DimPoint res = new DimPoint(a);
+
+        for(int i = 0; i < a.size(); i++)
+        {
+            res.set(i, b - a.get(i));
+        }
+        return  res;
+    }
+    
+    public  DimPoint sub(DimPoint other)
+    {
+        if(size()!= other.size())
+        {
+            throw new RuntimeException("Vectors sub :: this.Size()!= other.Size()");
+        }
+        for (int i = 0; i < other.size(); i++)
+        {
+            set(i, get(i) - other.get(i));
+        }
+        return this;
+    }
+
+    public  DimPoint sub(double other)
+    {
+        for (int i = 0; i < size(); i++)
+        {
+            set(i, get(i) - other);
+        }
+        return this;
+    }
+    
+    public static DimPoint mul(DimPoint a,double b)
+    {
+        DimPoint res = new DimPoint(a);
+        return  res.mul(b);
+    }
+
+    public static DimPoint mul(double b,DimPoint a)
+    {
+        return  mul(a,b);
+    }
+
+    public static String toRationalStr(DimPoint value)
+    {
+        return toRationalStr(value,  true);
+    }
+
+    public static String toRationalStr(DimPoint value, boolean fullRational)
+    {
+        StringBuilder str = new StringBuilder("{ ");
+        for (int i = 0; i < value.size() - 1; i++)
+        {
+            str.append(toRationalStr(value.get(i), fullRational));
+            str.append(", ");
+        }
+        str.append(toRationalStr(value.get(value.size() - 1), fullRational));
+
+        str.append(" }");
+        return str.toString();
+    }
+
+    public static String toRationalStr(double value, boolean fullRational)
+    {
+        int[] number =  decimalToRational(value);
+        if (number[1] == 0)
+        {
+            return String.valueOf(number[0]);
+        }
+        if (number[0] == 0)
+        {
+            return String.valueOf(number[1]) + "/" + String.valueOf(number[2]);
+        }
+
+        if (fullRational)
+        {
+            return String.valueOf((number[1] + Math.abs(number[0]) * number[2]) * (number[0] >= 0 ? 1 : -1)) + "/" + String.valueOf(number[2]);
+        }
+        return String.valueOf(number[0]) + " " + String.valueOf(number[1]) + "/" + String.valueOf(number[2]);
+    }
+
+    public static String toRationalStr(double value)
+    {
+        return toRationalStr(value, true);
+    }
+
+    public static int[] decimalToRational(double value)
+    {
+        return decimalToRational(value,1000);
+    }
+
+    public static int[] decimalToRational(double value, int max_den)
+    {
+        long m00 = 1;
+        long m01 = 0;
+        long m10 = 0;
+        long m11 = 1;
+
+        int[] number = new int[3];
+
+        long ai;
+
+        double x;
+
+        int sign = value >= 0 ? 1 : -1;
+
+        x = Math.abs(value);
+
+        long t;
+
+        while (m10 * (ai = (long)x) + m11 <= max_den)
+        {
+            t =m00 * ai + m01;
+
+            m01 = m00;
+            m00 = t;
+
+            t = m10 * ai + m11;
+
+            m11 = m10;
+            m10 = t;
+            if (x == (double)ai)
+            {
+                break;
+            }   // AF: division by zero
+            x = 1 / (x - (double)ai);
+            if (x > (double)0x7FFFFFFF)
+            {
+                break;
+            }  // AF: representation failure
+        }
+
+        if ((number[0] = (int)(m00 / m10)) != 0)
+        {
+            number[1] = (int)(m00 - number[0] * m10);
+
+            number[0] *= sign;
+
+            number[2] = (int)m10;
+
+            return number;
+        }
+        number[0]  = 0;
+
+        number[1]  = (int)(sign * m00);
+
+        number[2]  = (int)m10;
+
+        return number;
     }
 }
